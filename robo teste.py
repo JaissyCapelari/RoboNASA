@@ -21,28 +21,28 @@ campo = [[0, 0], [0, 0]]
 
 # Funções
 def cadastrar_robo():
-        if len(robos) >= 4:
-            messagebox.showwarning("Aviso", "Não é possível cadastrar mais robôs (limite 4).")
+    if len(robos) >= 4:
+        messagebox.showwarning("Aviso", "Não é possível cadastrar mais robôs (limite 4).")
         return
     
     nome = simpledialog.askstring("Cadastro", "Digite o nome do robô:")
-        if not nome:
-            return
+    if not nome:
+        return
     energia = simpledialog.askinteger("Cadastro", "Digite a energia do robô:", minvalue=0, maxvalue=100)
     nivel = simpledialog.askinteger("Cadastro", "Digite o nível do robô:", minvalue=1, maxvalue=10)
     
-        identificador = len(robos) + 1
-        novo = Robo(identificador, nome, energia, nivel)
-        robos.append(novo)
-        messagebox.showinfo("Sucesso", f"Robô {nome} cadastrado!")
+    identificador = len(robos) + 1
+    novo = Robo(identificador, nome, energia, nivel)
+    robos.append(novo)
+    messagebox.showinfo("Sucesso", f"Robô {nome} cadastrado!")
 
 
 def listar_robos():
     if not robos:
         messagebox.showwarning("Aviso", "Nenhum robô cadastrado.")
-        else:
-            texto = "\n".join(str(r) for r in robos)
-            messagebox.showinfo("Lista de Robôs", texto)
+    else:
+        texto = "\n".join(str(r) for r in robos)
+        messagebox.showinfo("Lista de Robôs", texto)
 
 
 def mostrar_campo():
@@ -53,7 +53,7 @@ def mostrar_campo():
 def simular_missao():
     if not robos:
         messagebox.showwarning("Aviso", "Nenhum robô disponível para missão.")
-            return
+        return
     
     ids = [str(r.identificador) for r in robos]
     escolha = simpledialog.askstring("Missão", f"Escolha o ID do robô: {', '.join(ids)}")
@@ -81,21 +81,21 @@ def simular_missao():
 def recuperar_robo():
     if not robos:
         messagebox.showwarning("Aviso", "Nenhum robô para recuperar.")
-            return
+        return
     
     ids = [str(r.identificador) for r in robos if r.posicao]
     if not ids:
         messagebox.showwarning("Aviso", "Nenhum robô no campo.")
-            return
+        return
 
     escolha = simpledialog.askstring("Recuperar", f"Escolha o ID do robô: {', '.join(ids)}")
     if not escolha or not escolha.isdigit():
-            return
+        return
 
     robo = next((r for r in robos if r.identificador == int(escolha)), None)
     if not robo or not robo.posicao:
         messagebox.showwarning("Aviso", "Robô não encontrado no campo.")
-            return
+        return
 
     x, y = robo.posicao
     campo[x][y] = 0
@@ -103,7 +103,7 @@ def recuperar_robo():
     messagebox.showinfo("Recuperar", f"Robô {robo.nome} foi recuperado para a base.")
 
 
-
+# Interface
 root = tk.Tk()
 root.title("Gerenciamento de Robôs Inteligentes")
 root.geometry("400x350")
