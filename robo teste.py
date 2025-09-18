@@ -129,4 +129,84 @@ btn5.pack(pady=5)
 btn6 = tk.Button(root, text="Sair", width=30, command=root.quit)
 btn6.pack(pady=20)
 
+
+//Restaurante 
+
+
+import os
+
+def carregar_produtos():
+    produtos = {}
+    if os.path.exists("produtos.txt"):
+        with open("produtos.txt", "r", encoding="utf-8") as f:
+            for linha in f:
+                partes = linha.strip().split("|")
+                if len(partes) == 3:
+                    codigo = partes[0].strip()
+                    nome = partes[1].strip()
+                    preco = float(partes[2].strip())
+                    produtos[codigo] = {"nome": nome, "preco": preco}
+    return produtos
+
+def mostrar_produtos(produtos):
+    print("\n--- Produtos Disponíveis ---")
+    for codigo, info in produtos.items():
+        print(f"{codigo} - {info['nome']} (R$ {info['preco']:.2f})")
+
+def obter_proximo_codigo_venda():
+    if not os.path.exists("vendas.txt"):
+        return 1
+    with open("vendas.txt", "r", encoding="utf-8") as f:
+        linhas = f.readlines()
+        if linhas:
+            ultimo = linhas[-1].split("|")[0].strip()
+            return int(ultimo) + 1
+    return 1
+
+def salvar_venda(codigo_venda, nome_cliente, total):
+    with open("vendas.txt", "a", encoding="utf-8") as f:
+        f.write(f"{codigo_venda:02d}|{nome_cliente}|{total:.2f}\n")
+
+def iniciar_comanda(produtos):
+    comanda = []
+    mostrar_produtos(produtos)
+
+    while True:
+        codigo = input("Digite o código do produto ou 'fim' para finalizar: ").strip()
+        if codigo.lower() == "fim":
+            break
+        if codigo in produtos:
+            comanda.append(produtos[codigo])
+            print(f"{produtos[codigo]['nome']} adicionado à comanda.")
+        else:
+            print("Código inválido.")
+
+    if comanda:
+        nome_cliente = input("Informe o nome do cliente: ").strip()
+        total = sum(item["preco"] for item in comanda)
+        codigo_venda = obter_proximo_codigo_venda()
+        salvar_venda(codigo_venda, nome_cliente, total)
+        print(f"Venda finalizada. Total: R$ {total:.2f}")
+    else:
+        print("Nenhum produto foi selecionado.")
+
+def menu():
+    produtos = carregar_produtos()
+    while True:
+        print("\n--- MENU ---")
+        print("1. Iniciar comanda")
+        print("2. Sair")
+        opcao = input("Escolha uma opção: ").strip()
+        if opcao == "1":
+            iniciar_comanda(produtos)
+        elif opcao == "2":
+            print("Encerrando o programa...")
+            break
+        else:
+            print("Opção inválida.")
+
+if __name__ == "__main__":
+    menu()
+
+
 root.mainloop()
